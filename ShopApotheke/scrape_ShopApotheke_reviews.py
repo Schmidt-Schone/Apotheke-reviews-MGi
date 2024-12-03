@@ -35,10 +35,10 @@ def is_element_present(driver, selector):
     except NoSuchElementException:
         return False
 
-def main():
+def scrape_ShopApotheke(base_url, PZN):
     driver = setup_driver()
     try:
-        base_url = "https://www.shop-apotheke.com/homoeopathie/4115243/neurexan-tropfen.htm"
+        
         driver.get(base_url)
         
         # Warten und Schließen des Dialogs
@@ -60,7 +60,7 @@ def main():
         print(f"Button nicht mehr verfügbar. Insgesamt {click_count} mal geklickt.")
         html = driver.page_source
         #save html to file in folder Reviews
-        with open("Reviews/ShopApotheke.html", "w", encoding="utf-8") as f:
+        with open(f"Reviews/ShopApotheke_{PZN}.html", "w", encoding="utf-8") as f:
             f.write(html)
             #print(html)
         
@@ -70,5 +70,3 @@ def main():
         print("Schließe den Browser")
         driver.quit()
 
-if __name__ == "__main__":
-    main()

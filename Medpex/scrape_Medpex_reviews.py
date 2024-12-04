@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=10):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -51,7 +51,7 @@ def close_usemax_popup(driver):
         # Select the container or close button element
         close_button_selector = (By.ID, "um273817101101_closebtn")  # Change ID if needed
         # Wait until the close button is clickable
-        close_button = WebDriverWait(driver, 20).until(
+        close_button = WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable(close_button_selector)
         )
         # Scroll into view (if necessary) and click the close button
@@ -77,7 +77,7 @@ def click_customer_reviews(driver):
         # Check if the element is present before clicking
         if is_element_present(driver, customer_reviews_selector):
             # Wait until the element is clickable
-            customer_reviews_link = WebDriverWait(driver, 20).until(
+            customer_reviews_link = WebDriverWait(driver, 2).until(
                 EC.element_to_be_clickable(customer_reviews_selector)
             )
             # Scroll into view (if necessary) and click the element
@@ -91,31 +91,31 @@ def click_customer_reviews(driver):
         print(f"Failed to click the Customer review icon: {e}")
         print("No reviews available")  
 
-def main():  
+def scrape_Medpex(base_url, PZN):  
     driver = setup_driver()  
     try:  
-        base_url = "https://www.medpex.de/sinupret-extract/9285547"  
+        
         driver.get(base_url)
-        time.sleep(20)
+        time.sleep(2)
           
         # Schließen aller Pop-ups  
         close_first_popups(driver)
         close_usemax_popup(driver)
-        time.sleep(10)
+        time.sleep(2)
         force_close_usemax_popup(driver)
 
         #Main interaction
         click_customer_reviews(driver)
-        time.sleep(10)
+        time.sleep(2)
 
         html = driver.page_source  
         # save html to file in folder Reviews  
-        with open("Reviews/Medpex.html", "w", encoding="utf-8") as f:  
+        with open(f"Reviews/Medpex_{PZN}.html", "w", encoding="utf-8") as f:  
             f.write(html)
   
         # Going to next page  
         next_page_selector = (By.XPATH, "//a[text()='>']")  
-        time.sleep(10)
+        time.sleep(2)
   
         click_count = 0  
         while is_element_present(driver, next_page_selector):  
@@ -124,12 +124,12 @@ def main():
                 print(f"Element erfolgreich geklickt. Klick Nummer: {click_count}")
                 html = driver.page_source  
                 # save html to file in folder Reviews  
-                with open("Reviews/Medpex.html", "a", encoding="utf-8") as f:  
+                with open(f"Reviews/Medpex_{PZN}.html", "a", encoding="utf-8") as f:  
                     f.write(html) 
-                time.sleep(10)  
+                time.sleep(2)  
             else:  
                 print("Klicken fehlgeschlagen, versuche es erneut")  
-            time.sleep(10)  # Pause zwischen den Klicks  
+            time.sleep(2)  # Pause zwischen den Klicks  
   
         print(f"Button nicht mehr verfügbar. Insgesamt {click_count} mal geklickt.")  
          
@@ -139,5 +139,3 @@ def main():
         print("Schließe den Browser")  
         driver.quit()  
   
-if __name__ == "__main__":  
-    main()  

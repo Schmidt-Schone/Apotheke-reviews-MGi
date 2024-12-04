@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=20):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -40,7 +40,7 @@ def click_kundenbewertungen(driver):
         # CSS selector for the "Kundenbewertungen" tab using its ID
         kundenbewertungen_selector = (By.ID, "productReviewTab")        
         # Wait until the "Kundenbewertungen" tab is clickable
-        kundenbewertungen_tab = WebDriverWait(driver, 20).until(
+        kundenbewertungen_tab = WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable(kundenbewertungen_selector)
         )       
         # Scroll into view and click the "Kundenbewertungen" tab
@@ -58,14 +58,14 @@ def click_load_more_reviews(driver):
         while True:
             try:
                 # Wait until the button is visible and clickable
-                load_more_button = WebDriverWait(driver, 10).until(
+                load_more_button = WebDriverWait(driver, 2).until(
                     EC.element_to_be_clickable(load_more_button_selector)
                 )               
                 # Scroll into view and click the button
                 driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", load_more_button)
                 load_more_button.click()
                 click_count += 1
-                time.sleep(3)
+                time.sleep(2)
                 print(f"Clicked 'Load More Reviews' button {click_count} times.")                
                 # Adding a short wait to avoid too many requests in quick succession
                 WebDriverWait(driver, 2)
@@ -83,7 +83,7 @@ def accept_or_reject_cookies(driver):
         cookie_reject_selector = (By.XPATH, "//a[text()='Ablehnen']")
         
         # Wait until either the accept or reject button is clickable
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable(cookie_accept_selector)
         )
 
@@ -105,14 +105,14 @@ def main():
     try:  
         base_url = "https://www.medikamente-per-klick.de/dysto-loges-tabletten-50st-12346465"  
         driver.get(base_url)
-        time.sleep(20)
+        time.sleep(2)
         
         accept_or_reject_cookies(driver)
-        time.sleep(5)
+        time.sleep(2)
 
         # Main Interaction
         click_kundenbewertungen(driver)
-        time.sleep(5)
+        time.sleep(2)
         click_load_more_reviews(driver)  
         
         html = driver.page_source  

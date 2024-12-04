@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())
     return webdriver.Edge(service=service, options=edge_options)
 
-def wait_and_click(driver, selector, timeout=10):
+def wait_and_click(driver, selector, timeout=2):
     try:
         element = WebDriverWait(driver, timeout).until(
             EC.element_to_be_clickable(selector)
         )
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
-        time.sleep(1)  # Kurze Pause nach dem Scrollen
+        time.sleep(2)  # Kurze Pause nach dem Scrollen
         element.click()
         return True
     except (TimeoutException, ElementClickInterceptedException):

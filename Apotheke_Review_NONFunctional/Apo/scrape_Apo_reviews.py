@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=20):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -62,7 +62,7 @@ def main():
     try:  
         base_url = "https://www.apo.com/ducray-kelual-ds-anti-schuppen-shampoo-100ml-pzn-02894355"  
         driver.get(base_url)
-        time.sleep(30)
+        time.sleep(2)
 
         # closing all popups
         close_all_popups(driver)
@@ -71,14 +71,14 @@ def main():
         try:
             element = driver.find_element(By.CSS_SELECTOR, "div.ps-spacing-8.micro")
             element.click()
-            time.sleep(20)
+            time.sleep(2)
 
             element_produkt = driver.find_element(By.CSS_SELECTOR, "button.btn.btn-primary.btn-lg.mb-spacing-0.mb-md-spacing-32.my-spacing-32.w-100.d-none.d-md-block")
             element_produkt.click()
-            time.sleep(20)
+            time.sleep(2)
             
             main_element_selector = (By.CSS_SELECTOR, "a[data-action='show_more_reviews']")  
-            time.sleep(20)
+            time.sleep(2)
 
             click_count = 0  
             max_clicks = 10  # Set the maximum number of clicks
@@ -86,10 +86,10 @@ def main():
                 if wait_and_click(driver, main_element_selector):  
                     click_count += 1  
                     print(f"Element erfolgreich geklickt. Klick Nummer: {click_count}")
-                    time.sleep(120) 
+                    time.sleep(2) 
                 else:  
                     print("Klicken fehlgeschlagen, versuche es erneut")  
-                    time.sleep(120)  # Pause zwischen den Klicks
+                    time.sleep(2)  # Pause zwischen den Klicks
             
             if click_count >= max_clicks:
                 print(f"Maximale Anzahl von {max_clicks} Klicks erreicht, Schleife beendet.")

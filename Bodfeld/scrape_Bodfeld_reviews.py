@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=20):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -53,7 +53,7 @@ def close_usemax_popup(driver):
         # Select the container or close button element
         close_button_selector = (By.ID, "um273817100896_closebtn")  # Change ID if needed
         # Wait until the close button is clickable
-        close_button = WebDriverWait(driver, 20).until(
+        close_button = WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable(close_button_selector)
         )
         # Scroll into view (if necessary) and click the close button
@@ -70,12 +70,12 @@ def force_close_usemax_popup(driver):
     except Exception as e:
         print(f"Failed to force close the Usemax popup: {e}")
   
-def main():  
+def scrape_Bodfeld(base_url, PZN):  
     driver = setup_driver()  
     try:  
-        base_url = "https://www.docmorris.de/tebonin-konzent-240-mg/07752016"  
+        
         driver.get(base_url)
-        time.sleep(60)
+        time.sleep(2)
           
         # Schließen aller Pop-ups  
         close_first_popups(driver)
@@ -88,7 +88,7 @@ def main():
         while True:
             try:
                 # Check if the target element is present and visible
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located(target_element_selector))
+                WebDriverWait(driver, 2).until(EC.presence_of_element_located(target_element_selector))
                 # Once the element is found, scroll to it
                 target_element = driver.find_element(*target_element_selector)
                 driver.execute_script("arguments[0].scrollIntoView(true);", target_element)
@@ -101,23 +101,23 @@ def main():
   
         # Hauptinteraktion mit dem Element  
         main_element_selector = (By.CLASS_NAME, "bv-content-btn-pages-load-more-text")  
-        time.sleep(30)
+        time.sleep(2)
   
         click_count = 0  
         while is_element_present(driver, main_element_selector):  
             if wait_and_click(driver, main_element_selector):  
                 click_count += 1  
                 print(f"Element erfolgreich geklickt. Klick Nummer: {click_count}")
-                time.sleep(30)  
+                time.sleep(2)  
             else:  
                 print("Klicken fehlgeschlagen, versuche es erneut")  
-            time.sleep(30)  # Pause zwischen den Klicks  
+            time.sleep(2)  # Pause zwischen den Klicks  
   
         print(f"Button nicht mehr verfügbar. Insgesamt {click_count} mal geklickt.")  
         
         html = driver.page_source  
         # save html to file in folder Reviews  
-        with open("Reviews/DocMorris.html", "w", encoding="utf-8") as f:  
+        with open(f"Reviews/Bodfeld_{PZN}.html", "w", encoding="utf-8") as f:  
             f.write(html)  
             # print(html)  
     except Exception as e:  
@@ -126,5 +126,3 @@ def main():
         print("Schließe den Browser")  
         driver.quit()  
   
-if __name__ == "__main__":  
-    main()  

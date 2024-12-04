@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=10):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -42,7 +42,7 @@ def accept_or_reject_cookies(driver):
         cookie_reject_selector = (By.XPATH, "//a[text()='ablehnen']")
         
         # Wait until either the accept or reject button is clickable
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable(cookie_accept_selector)
         )
 
@@ -68,7 +68,7 @@ def click_customer_reviews(driver):
         # Check if the element is present before clicking
         if is_element_present(driver, customer_reviews_selector):
             # Wait until the element is clickable
-            customer_reviews_link = WebDriverWait(driver, 20).until(
+            customer_reviews_link = WebDriverWait(driver, 2).until(
                 EC.element_to_be_clickable(customer_reviews_selector)
             )
             # Scroll into view (if necessary) and click the element
@@ -83,24 +83,24 @@ def click_customer_reviews(driver):
         print("No reviews available")
 
 
-def main():  
+def scrape_Volksversand(base_url, PZN):  
     driver = setup_driver()  
     try:  
-        base_url = "https://volksversand.de/arzneimittel/grippostad-c-24-kapseln-pzn-00571748-2055572"  
+        
         driver.get(base_url)
-        time.sleep(20)
+        time.sleep(2)
           
         # Schließen aller Pop-ups  
         accept_or_reject_cookies(driver)
-        time.sleep(5)
+        time.sleep(2)
 
         #Main interaction
         click_customer_reviews(driver)
-        time.sleep(5)
+        time.sleep(2)
 
         html = driver.page_source  
         # save html to file in folder Reviews  
-        with open("Reviews/Volksversandapotheke.html", "w", encoding="utf-8") as f:  
+        with open(f"Reviews/Volksversandapotheke_{PZN}.html", "w", encoding="utf-8") as f:  
             f.write(html) 
          
     except Exception as e:  
@@ -109,5 +109,3 @@ def main():
         print("Schließe den Browser")  
         driver.quit()  
   
-if __name__ == "__main__":  
-    main()  

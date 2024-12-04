@@ -10,7 +10,7 @@ def click_more_reviews(driver):
             
             click_count += 1
             print(f"Clicked on 'mehr Bewertungen ansehen' button {click_count} times.")
-            time.sleep(10)  # Pause between clicks to load new reviews
+            time.sleep(2)  # Pause between clicks to load new reviews
             
         except NoSuchElementException:
             print("Button not found.")

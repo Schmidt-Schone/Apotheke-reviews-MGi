@@ -16,13 +16,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=10):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -48,13 +48,13 @@ def accept_cookies(driver):
 def close_banner(driver):
     try:
         # Wait until the close button is present
-        popup_close_button = WebDriverWait(driver, 10).until(
+        popup_close_button = WebDriverWait(driver, 2).until(
             EC.presence_of_element_located((By.CLASS_NAME, "element"))
         )
         
         # Check if the close button is clickable
         try:
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 2).until(
                 EC.element_to_be_clickable((By.CLASS_NAME, "element"))
             )
             # Scroll into view and click the close button if clickable
@@ -117,18 +117,18 @@ def main():
     try:  
         base_url = "https://www.apodiscounter.de/hoggar-melatonin-balance-einschlafspray-20ml-pzn-17877575"  
         driver.get(base_url)
-        time.sleep(10)
+        time.sleep(2)
           
         # Schließen aller Pop-ups  
         accept_cookies(driver)
         time.sleep(2)
         click_rating_stars(driver)
-        time.sleep(20)
+        time.sleep(2)
         #close_banner(driver)
 
         #Main interaction
         click_more_reviews(driver)
-        time.sleep(10)
+        time.sleep(2)
         html = driver.page_source  
         # save html to file in folder Reviews  
         with open("Reviews/ApoDiscounter.html", "w", encoding="utf-8") as f:  

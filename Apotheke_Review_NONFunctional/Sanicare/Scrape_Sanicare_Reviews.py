@@ -15,13 +15,13 @@ def setup_driver():
     service = EdgeService(EdgeChromiumDriverManager().install())  
     return webdriver.Edge(service=service, options=edge_options)  
   
-def wait_and_click(driver, selector, timeout=10):  
+def wait_and_click(driver, selector, timeout=2):  
     try:  
         element = WebDriverWait(driver, timeout).until(  
             EC.element_to_be_clickable(selector)  
         )  
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)  
-        time.sleep(1)  # Kurze Pause nach dem Scrollen  
+        time.sleep(2)  # Kurze Pause nach dem Scrollen  
         element.click()  
         return True  
     except (TimeoutException, ElementClickInterceptedException):  
@@ -59,7 +59,7 @@ def click_customer_reviews(driver):
         # Check if the element is present before clicking
         if is_element_present(driver, customer_reviews_selector):
             # Wait until the element is clickable
-            customer_reviews_link = WebDriverWait(driver, 20).until(
+            customer_reviews_link = WebDriverWait(driver, 2).until(
                 EC.element_to_be_clickable(customer_reviews_selector)
             )
             # Scroll into view (if necessary) and click the element
@@ -78,21 +78,21 @@ def main():
     try:  
         base_url = "https://www.sanicare.de/p/neurexan-tabletten-dr-theiss-einschlafspray-set-1-81906662"  
         driver.get(base_url)
-        time.sleep(20)
+        time.sleep(2)
           
         # Schließen aller Pop-ups
         accept_cookies(driver)
-        time.sleep(5)
+        time.sleep(2)
 
         html = driver.page_source  
         # save html to file in folder Reviews  
         with open("Reviews/Sanicare.html", "w", encoding="utf-8") as f:  
             f.write(html)
-        time.sleep(5)
+        time.sleep(2)
   
         # Going to next page  
         next_page_selector = (By.XPATH, "//a[text()='>']")  
-        time.sleep(10)
+        time.sleep(2)
   
         click_count = 0  
         while is_element_present(driver, next_page_selector):  
@@ -103,10 +103,10 @@ def main():
                 # save html to file in folder Reviews  
                 with open("Reviews/Sanicare.html", "a", encoding="utf-8") as f:  
                     f.write(html) 
-                time.sleep(10)  
+                time.sleep(2)  
             else:  
                 print("Klicken fehlgeschlagen, versuche es erneut")  
-            time.sleep(10)  # Pause zwischen den Klicks  
+            time.sleep(2)  # Pause zwischen den Klicks  
   
         print(f"Button nicht mehr verfügbar. Insgesamt {click_count} mal geklickt.")  
          

@@ -30,7 +30,7 @@ def click_star_icon(driver):
         # Check if the element is present before clicking
         if is_element_present(driver, star_icon_selector):
             # Wait until the element is clickable
-            star_icon = WebDriverWait(driver, 20).until(
+            star_icon = WebDriverWait(driver, 2).until(
                 EC.element_to_be_clickable(star_icon_selector)
             )
             
@@ -45,20 +45,20 @@ def click_star_icon(driver):
         print(f"Failed to click the star icon: {e}")
         print("No reviews available")     
   
-def main():  
+def scrape_ApoNeo(base_url, PZN):  
     driver = setup_driver()  
     try:  
-        base_url = "https://www.aponeo.de/16538227-nurofen-junior-fieber-u-schmerzsaft-erdbe-40-mg-ml.html"  
+        
         driver.get(base_url)
-        time.sleep(30)
+        time.sleep(2)
 
         #Main interaction
         click_star_icon(driver)
-        time.sleep(60)
+        time.sleep(2)
 
         html = driver.page_source  
         # save html to file in folder Reviews  
-        with open("Reviews/ApoNeo.html", "w", encoding="utf-8") as f:  
+        with open(f"Reviews/ApoNeo_{PZN}.html", "w", encoding="utf-8") as f:  
             f.write(html)
   
     except Exception as e:  
@@ -67,5 +67,3 @@ def main():
         print("Schließe den Browser")  
         driver.quit()  
   
-if __name__ == "__main__":  
-    main()

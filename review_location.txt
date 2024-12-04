@@ -1,0 +1,3 @@
+All scraped reviews so far saved on Sharepoint under following location:
+
+Schmidt & Schöne Strategy Team - Dokumente\Digital\02_Review_Webcrawler\Review_12_2024

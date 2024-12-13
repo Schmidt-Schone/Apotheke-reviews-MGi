@@ -11,17 +11,23 @@ with open('./Reviews/ShopApoReview.html', 'r', encoding='utf-8') as file:
 reviews = analyze_EPharma_Reviews(html_content=html_content)
 
 def getCursor():
-    
-    connection = psycopg2.connect(  
-            host="10.0.0.2",  
-            database="buybox_crawler",  
-            user="crawler",  
-            password="eaZjfsltrxmJ7tN9Ljw2X73U9HvFtyam",  
-            port="5432",  
-            connect_timeout=3000  
-    )  
-    
-    cursor = connection.cursor() 
+    try:
+        connection = psycopg2.connect(  
+                host="10.0.0.2",  
+                database="buybox_crawler",  
+                user="crawler",  
+                password="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",  
+                port="5432",  
+                connect_timeout=3000  
+        )  
+        
+        cursor = connection.cursor() 
+
+        return cursor
+    except Exception:
+        if connection:
+            connection.close()
+        raise
 
     return cursor
 
